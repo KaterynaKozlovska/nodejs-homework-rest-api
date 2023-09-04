@@ -29,9 +29,9 @@ router.get('/:contactId', async (req, res, next) => {
     const result = await getContactById(contactId);
 
     if (!result) {
-      res.status(200).json(result);
-      res.status(404).json({ message: `Contact by ID ${contactId}: not found` });
+      res.status(404).json({ message: 'Not found' });
     }
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({
       message: 'Server error',
@@ -43,7 +43,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { error } = schema.validate(req.body);
     if (error) {
-      return res.status(500).json({ message: 'Missing required name field' });
+      return res.status(400).json({ message: 'Missing required name field' });
     }
 
     const { name, email, phone } = req.body;
@@ -60,7 +60,10 @@ router.delete('/:contactId', async (req, res, next) => {
     const { contactId } = req.params;
     const result = await removeContact(contactId);
 
-    res.status(201).json(result);
+    if (!result) {
+      res.status(404).json({ message: 'Not found' });
+    }
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -70,7 +73,7 @@ router.put('/:contactId', async (req, res, next) => {
   try {
     const { error } = schema.validate(req.body);
     if (error) {
-      return res.status(500).json({ message: 'Missing fields' });
+      return res.status(400).json({ message: 'Missing fields' });
     }
 
     const { contactId } = req.params;
@@ -79,7 +82,7 @@ router.put('/:contactId', async (req, res, next) => {
 
     if (!result) {
       res.status(200).json(result);
-      res.status(404).json({ message: `Contact by ID ${contactId}: not found` });
+      res.status(404).json({ message: 'Not found' });
     }
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
