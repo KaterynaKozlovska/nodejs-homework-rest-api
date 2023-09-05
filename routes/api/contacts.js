@@ -8,7 +8,7 @@ const {
   updateContact,
 } = require('../../models/contacts');
 
-const { schema } = require('../../schemas/joiShema');
+const { contactsAddSchema, contactsUpdateSchema } = require('../../schemas/joiShema');
 
 const router = express.Router();
 
@@ -41,7 +41,7 @@ router.get('/:contactId', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const { error } = schema.validate(req.body);
+    const { error } = contactsAddSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ message: 'Missing required name field' });
     }
@@ -71,19 +71,18 @@ router.delete('/:contactId', async (req, res, next) => {
 
 router.put('/:contactId', async (req, res, next) => {
   try {
-    const { error } = schema.validate(req.body);
+    const { error } = contactsUpdateSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ message: 'Missing fields' });
     }
 
     const { contactId } = req.params;
-    const { name, email, phone } = req.body;
-    const result = await updateContact(contactId, { name, email, phone });
+    const result = await updateContact(contactId, req.body);
 
     if (!result) {
-      res.status(200).json(result);
       res.status(404).json({ message: 'Not found' });
     }
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
