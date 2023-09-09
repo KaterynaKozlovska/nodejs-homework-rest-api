@@ -8,6 +8,7 @@ const {
   updateContact,
 } = require('../../models/contacts');
 
+const { HttpError } = require('../../helpers');
 const { contactsAddSchema, contactsUpdateSchema } = require('../../schemas/joiShema');
 
 const router = express.Router();
@@ -29,7 +30,7 @@ router.get('/:contactId', async (req, res, next) => {
     const result = await getContactById(contactId);
 
     if (!result) {
-      res.status(404).json({ message: 'Not found' });
+      throw HttpError(404, 'Not found');
     }
     res.status(200).json(result);
   } catch (error) {
