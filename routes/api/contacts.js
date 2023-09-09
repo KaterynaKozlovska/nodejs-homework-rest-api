@@ -18,9 +18,7 @@ router.get('/', async (req, res, next) => {
     const result = await listContacts();
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({
-      message: 'Server error',
-    });
+    next(error);
   }
 });
 
@@ -34,9 +32,7 @@ router.get('/:contactId', async (req, res, next) => {
     }
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({
-      message: 'Server error',
-    });
+    next(error);
   }
 });
 
@@ -52,7 +48,7 @@ router.post('/', async (req, res, next) => {
 
     res.status(201).json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
@@ -62,11 +58,11 @@ router.delete('/:contactId', async (req, res, next) => {
     const result = await removeContact(contactId);
 
     if (!result) {
-      res.status(404).json({ message: 'Not found' });
+      throw HttpError(404, 'Not found');
     }
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
@@ -85,7 +81,7 @@ router.put('/:contactId', async (req, res, next) => {
     }
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
