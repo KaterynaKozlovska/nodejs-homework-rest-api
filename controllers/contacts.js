@@ -7,7 +7,7 @@ const {
 } = require('../models/contacts');
 
 const { HttpError, ctrlWrapper } = require('../helpers');
-const { contactsAddSchema, contactsUpdateSchema } = require('../schemas/joiShema');
+
 
 const listContacts = async (req, res) => {
   const result = await listContacts();
@@ -24,10 +24,6 @@ const getContactById = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  const { error } = contactsAddSchema.validate(req.body);
-  if (error) {
-    throw HttpError(400, 'Missing required name field');
-  }
   const result = await addContact(req.body);
   res.status(201).json(result);
 };
@@ -42,10 +38,6 @@ const removeContact = async (req, res) => {
 };
 
 const updateContact = async (req, res) => {
-  const { error } = contactsUpdateSchema.validate(req.body);
-  if (error) {
-    throw HttpError(400, 'Missing fields');
-  }
   const { contactId } = req.params;
   const result = await updateContact(contactId, req.body);
   if (!result) {
