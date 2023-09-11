@@ -8,13 +8,12 @@ const {
 
 const { HttpError, ctrlWrapper } = require('../helpers');
 
-
-const listContacts = async (req, res) => {
+const getAllContacts = async (req, res) => {
   const result = await listContacts();
   res.status(200).json(result);
 };
 
-const getContactById = async (req, res) => {
+const getById = async (req, res) => {
   const { contactId } = req.params;
   const result = await getContactById(contactId);
   if (!result) {
@@ -23,12 +22,12 @@ const getContactById = async (req, res) => {
   res.status(200).json(result);
 };
 
-const addContact = async (req, res) => {
+const add = async (req, res) => {
   const result = await addContact(req.body);
   res.status(201).json(result);
 };
 
-const removeContact = async (req, res) => {
+const removeById = async (req, res) => {
   const { contactId } = req.params;
   const result = await removeContact(contactId);
   if (!result) {
@@ -37,7 +36,7 @@ const removeContact = async (req, res) => {
   res.status(200).json(result);
 };
 
-const updateContact = async (req, res) => {
+const updateById = async (req, res) => {
   const { contactId } = req.params;
   const result = await updateContact(contactId, req.body);
   if (!result) {
@@ -47,9 +46,9 @@ const updateContact = async (req, res) => {
 };
 
 module.exports = {
-  listContacts: ctrlWrapper(listContacts),
-  getContactById: ctrlWrapper(getContactById),
-  addContact: ctrlWrapper(addContact),
-  removeContact: ctrlWrapper(removeContact),
-  updateContact: ctrlWrapper(updateContact),
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getById: ctrlWrapper(getById),
+  add: ctrlWrapper(add),
+  removeById: ctrlWrapper(removeById),
+  updateById: ctrlWrapper(updateById),
 };
