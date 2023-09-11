@@ -1,17 +1,26 @@
-const express = require('express');
+import express from 'express';
 
-const ctrl = require('../../controllers/contacts');
+import ctrl from '../../controllers/contacts.js';
 
-const router = express.Router();
+import * as contactSchema from '../../models/Contact.js';
 
-router.get('/', ctrl.getAllContacts);
+import { isValidId } from '../../middlewares/index.js';
+import { validateBody } from '../../helpers/index.js';
 
-router.get('/:contactId', ctrl.getById);
+const contactsRouter = express.Router();
+const contactAddValidate = validateBody(contactSchema.contactsAddSchema);
+const contactUpdateValidate = validateBody(contactSchema.contactsUpdateSchema);
 
-router.post('/', ctrl.add);
+contactsRouter.get('/', ctrl.getAllContacts);
 
-router.delete('/:contactId', ctrl.removeById);
+contactsRouter.get('/:id', isValidId, ctrl.getById);
 
-router.put('/:contactId', ctrl.updateById);
+contactsRouter.post('/', contactAddValidate, ctrl.add);
 
-module.exports = router;
+contactsRouter.delete('/:id', isValidId, ctrl.removeById);
+
+contactsRouter.put('/:id', isValidId, contactUpdateValidate, ctrl.updateById);
+
+contactsRouter.patch('/:id/favorite', isValidId, contactUpdateValidate, ctrl.updateStatusContact);
+
+export default contactsRouter;
