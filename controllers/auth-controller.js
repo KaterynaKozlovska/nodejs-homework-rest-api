@@ -21,6 +21,7 @@ const signup = async (req, res) => {
   const newUser = await User.create({ ...req.body, password: hashPassword });
 
   res.status(201).json({
+    status: 'success',
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
@@ -50,6 +51,7 @@ const signin = async (req, res) => {
   await User.findByIdAndUpdate(id, { token });
 
   res.status(200).json({
+    status: 'success',
     token,
     user: {
       email: user.email,
@@ -62,6 +64,7 @@ const getCurrent = (req, res) => {
   const { subscription, email } = req.user;
 
   res.status(200).json({
+    status: 'success',
     user: {
       email,
       subscription,
@@ -78,9 +81,27 @@ const signout = async (req, res) => {
   });
 };
 
+const updateSubscription = async (req, res) => {
+  const { id } = req.user;
+  const result = await User.findByIdAndUpdate({ _id: id }, req.body, {
+    new: true,
+  });
+  if (!result) {
+    throw HttpError(404, 'Not found');
+  }
+  res.status(200).json({
+    status: 'success',
+    user: {
+      emeil: data.emeil,
+      subscription: data.subscription,
+    },
+  });
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
   getCurrent: ctrlWrapper(getCurrent),
   signout: ctrlWrapper(signout),
+  updateSubscription: ctrlWrapper(updateSubscription),
 };
