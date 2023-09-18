@@ -3,7 +3,7 @@ import Contact from '../models/Contact.js';
 
 const getAllContacts = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await Contact.find({ owner });
+  const result = await Contact.find({ owner }).populate('owner', 'email, subscription');
   res.status(200).json(result);
 };
 
