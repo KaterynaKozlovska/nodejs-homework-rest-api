@@ -4,12 +4,14 @@ import ctrl from '../../controllers/contacts.js';
 
 import * as contactSchema from '../../models/Contact.js';
 
-import { isValidId } from '../../middlewares/index.js';
+import { authenticate, isValidId } from '../../middlewares/index.js';
 import { validateBody } from '../../helpers/index.js';
 
 const contactsRouter = express.Router();
 const contactAddValidate = validateBody(contactSchema.contactsAddSchema);
 const contactUpdateValidate = validateBody(contactSchema.contactsUpdateSchema);
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get('/', ctrl.getAllContacts);
 
