@@ -10,8 +10,10 @@ import { HttpError } from '../helpers/index.js';
 
 import { ctrlWrapper } from '../helpers/index.js';
 
+import { transformAvatar } from '../middlewares/index.js';
+
 const { JWT_SECRET } = process.env;
-const avatarPath = path.join('../', 'public', 'avatars');
+const avatarPath = path.resolve('public', 'avatars');
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -108,11 +110,13 @@ const updateAvatar = async (req, res) => {
   const { path: tempUpload, originalname } = req.file;
   const filename = `${_id}_${originalname}`;
   const resultUpload = path.join(avatarPath, filename);
+  await transformAvatar(tempUpload);
   await fs.rename(tempUpload, resultUpload);
   const avatarURL = path.join('avatars', filename);
   await User.findByIdAndUpdate(_id, { avatarURL });
 
-  res.json({
+  res.status(200).json({
+    status: 'success',
     avatarURL,
   });
 };
