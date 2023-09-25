@@ -6,7 +6,7 @@ import * as userSchemas from '../../models/User.js';
 
 import { validateBody } from '../../helpers/index.js';
 
-import { authenticate } from '../../middlewares/index.js';
+import { authenticate, upload } from '../../middlewares/index.js';
 
 const authRouter = express.Router();
 
@@ -22,4 +22,7 @@ authRouter.get('/current', authenticate, authController.getCurrent);
 authRouter.post('/logout', authenticate, authController.signout);
 
 authRouter.patch('/', authenticate, authController.updateSubscription);
+
+authRouter.patch('/avatars', authenticate, upload.single('avatar'), authController.updateAvatar);
+
 export default authRouter;
