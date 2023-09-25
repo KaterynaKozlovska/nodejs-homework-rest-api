@@ -5,7 +5,6 @@ import 'dotenv/config';
 
 import contactsRouter from './routes/api/contacts.js';
 import authRouter from './routes/api/auth-router.js';
-import upload from './middlewares/upload.js';
 const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
@@ -13,7 +12,7 @@ const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
-app.use(upload);
+app.use(express.static('public'));
 
 app.use('/api/contacts', contactsRouter);
 app.use('/api/auth', authRouter);
