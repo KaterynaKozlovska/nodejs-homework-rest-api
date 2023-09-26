@@ -109,8 +109,10 @@ const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
   const filename = `${_id}_${originalname}`;
-  const resultUpload = path.join(avatarPath, filename);
+
   await transformAvatar(tempUpload);
+
+  const resultUpload = path.join(avatarPath, filename);
   await fs.rename(tempUpload, resultUpload);
   const avatarURL = path.join('avatars', filename);
   await User.findByIdAndUpdate(_id, { avatarURL });
@@ -119,6 +121,8 @@ const updateAvatar = async (req, res) => {
     status: 'success',
     avatarURL,
   });
+
+  // await fs.unlink(tempUpload);
 };
 
 export default {
