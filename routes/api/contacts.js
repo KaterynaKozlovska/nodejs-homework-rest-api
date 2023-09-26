@@ -4,7 +4,7 @@ import ctrl from '../../controllers/contacts.js';
 
 import * as contactSchema from '../../models/Contact.js';
 
-import { authenticate, isValidId } from '../../middlewares/index.js';
+import { authenticate, upload, isValidId } from '../../middlewares/index.js';
 import { validateBody } from '../../helpers/index.js';
 
 const contactsRouter = express.Router();
@@ -17,7 +17,7 @@ contactsRouter.get('/', ctrl.getAllContacts);
 
 contactsRouter.get('/:id', isValidId, ctrl.getById);
 
-contactsRouter.post('/', contactAddValidate, ctrl.add);
+contactsRouter.post('/', upload.single('avatar'), contactAddValidate, ctrl.add);
 
 contactsRouter.delete('/:id', isValidId, ctrl.removeById);
 
