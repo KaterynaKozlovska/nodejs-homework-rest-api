@@ -62,6 +62,10 @@ export const userSigninSchema = Joi.object({
   email: Joi.string().email(emailRegexp).required(),
 });
 
+export const userEmailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+});
+
 const User = model('user', userSchema);
 
 export default User;
